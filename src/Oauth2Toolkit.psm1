@@ -90,6 +90,15 @@ function ConvertTo-AuthorizationHeaders
     $headers
 }
 
+function Add-AdalAssemblies
+{
+    $assemblyPath = Join-path $PSScriptRoot "NetCoreAssemblies\Microsoft.IdentityModel.Clients.ActiveDirectory.dll"
+    Add-Type -path $assemblyPath
+
+    $assemblyPath = Join-path $PSScriptRoot "NetCoreAssemblies\Microsoft.IdentityModel.Clients.ActiveDirectory.Platform.dll"
+    Add-Type -path $assemblyPath
+}
+
 function New-OnBehalfOfAccessToken 
 {
     param(
@@ -105,7 +114,7 @@ function New-OnBehalfOfAccessToken
         [string]$ResourcePrincial = "https://graph.microsoft.com"
     )
 
-    #Import-AdalLibrary
+    Add-AdalAssemblies
 
     $authority = "https://login.microsoftonline.com/$Tenant"
     $authContext = New-Object "Microsoft.IdentityModel.Clients.ActiveDirectory.AuthenticationContext" -ArgumentList $authority
@@ -262,6 +271,8 @@ function Invoke-CodeGrantFlow
         [string]$Resource,
         [bool]$AlwaysPrompt = $false
     )
+    
+    # https://docs.microsoft.com/en-us/azure/active-directory/develop/v1-protocols-oauth-code
 
     $authorizationUrl = ("https://login.microsoftonline.com/{0}/oauth2/authorize?response_type=code&client_id={1}&redirect_uri={2}&resource={3}" -f $Tenant, $ClientId, $RedirectUrl, $Resource)
     if($AlwaysPrompt)
@@ -404,6 +415,7 @@ function Invoke-AdminConsentForApplication
         [Parameter(Mandatory = $true)]
         [string]$RedirectUrl
     )
+    # https://docs.microsoft.com/cs-cz/azure/active-directory/develop/v2-permissions-and-consent#using-the-admin-consent-endpoint
 
     $consentUrl = "https://login.microsoftonline.com/{0}/adminconsent?client_id={1}&state=12345&redirect_uri={2}" -f $Tenant, $ClientId, $RedirectUrl
     
