@@ -448,7 +448,7 @@ function Invoke-AdminConsentForApplication
         [Parameter(Mandatory = $true)]
         [string]$RedirectUrl
     )
-    # https://docs.microsoft.com/cs-cz/azure/active-directory/develop/v2-permissions-and-consent#using-the-admin-consent-endpoint
+    # https://docs.microsoft.com/en-us/azure/active-directory/develop/v2-permissions-and-consent#using-the-admin-consent-endpoint
 
     $consentUrl = "https://login.microsoftonline.com/{0}/adminconsent?client_id={1}&state=12345&redirect_uri={2}" -f $Tenant, $ClientId, $RedirectUrl
     
@@ -460,7 +460,7 @@ function Invoke-AdminConsentForApplication
     }
 }
 
-function Invoke-OnBehalfOfFlowcertificate {
+function Invoke-OnBehalfOfCertificateFlow {
     # https://docs.microsoft.com/en-us/azure/active-directory/develop/v1-oauth2-on-behalf-of-flow
     param(
         [Parameter(Mandatory = $true)]
@@ -579,7 +579,7 @@ function Invoke-ClientCredentalsCertificateFlow {
     $result
 }
 
-function Invoke-ClientCredentialsFlow  {
+function Invoke-ClientCredentialsFlow {
     param(
         [string]$Tenant,
         [Parameter(ParameterSetName='ClientCredential')]
